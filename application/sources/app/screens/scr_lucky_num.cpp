@@ -41,27 +41,30 @@ static void draw_ui() {
 
 	view_render.setCursor(2, 36);
 	view_render.print("Use Up/Down to select");
-	view_render.setCursor(2, 46);
-	view_render.print("Press Mode to generate");
+	view_render.setCursor(2, 50);
+	view_render.print("Press Mode to start");
 	view_render.update();
 }
 
 // this function will show the countdown and generate the lucky number, it will be called when user press the mode button
 static void show_countdown_and_generate() {
-	// countdown 3 2 1
-	view_render.clear();
+    // countdown from 3 to 1 with 1 second interval, and play sound effect for each number
+    view_render.clear();
 	view_render.setTextSize(2);
 	view_render.setTextColor(WHITE);
 	for (int c = 3; c >= 1; c--) {
 		view_render.clear();
-		view_render.setTextSize(4); // bigger size to fill most of the screen
-		view_render.setTextColor(WHITE);
-		view_render.setCursor(36, 8);
+        view_render.fillScreen(WHITE);
+		view_render.setTextSize(9); // bigger size to fill most of the screen
+		view_render.setTextColor(BLACK);
+		view_render.setCursor(45, 0);
 		view_render.print(c);
 		view_render.update();
 		BUZZER_PlaySound(BUZZER_SOUND_3BEEP);
 		sys_ctrl_delay_ms(600);
 	}
+
+
 
 	// generate random number with selected digits
 	uint32_t min = 1;
@@ -71,17 +74,17 @@ static void show_countdown_and_generate() {
 	uint32_t r = min + (rand() % range);
 
 	// show result
-	view_render.clear();
+	view_render.fillRect(0, 0, 128, 64, WHITE); // fill background with white
 	view_render.setTextSize(1);
-	view_render.setTextColor(WHITE);
+	view_render.setTextColor(BLACK);
 	view_render.setCursor(2, 4);
 	view_render.print("Result:");
-	view_render.setTextSize(2);
-	view_render.setCursor(8, 22);
+	view_render.setTextSize(3);
+	view_render.setCursor(8, 18);
 	view_render.print(r);
 	view_render.update();
 	BUZZER_PlaySound(BUZZER_SOUND_BANG);
-    sys_ctrl_delay_ms(2000);
+	sys_ctrl_delay_ms(2000);
 }
 
 void view_scr_lucky_num() {
