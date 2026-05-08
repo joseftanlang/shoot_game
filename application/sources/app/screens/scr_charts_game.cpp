@@ -62,8 +62,7 @@ void scr_charts_game_handle(ak_msg_t* msg) {
 		view_render_display_on();
 		// Read score 
 		ar_game_score_read(&gamescore_charts);
-	}
-		break;
+	}break;
 
 	case AC_DISPLAY_BUTTON_MODE_RELEASED: {
 		APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");

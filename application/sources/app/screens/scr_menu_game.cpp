@@ -242,12 +242,12 @@ void scr_menu_game_handle(ak_msg_t* msg) {
 					TIMER_ONE_SHOT);
 	} break;
 
-	case AC_DISPLAY_SHOW_IDLE: {
-		APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
-		timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
-		scr_idle_set_return_screen(scr_menu_game_handle, &scr_menu_game);
-		SCREEN_TRAN(scr_idle_handle,&scr_idle);
-	} break;
+	// case AC_DISPLAY_SHOW_IDLE: {
+	// 	APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
+	// 	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
+	// 	scr_idle_set_return_screen(scr_menu_game_handle, &scr_menu_game);
+	// 	SCREEN_TRAN(scr_idle_handle,&scr_idle);
+	// } break;
 
 	case AC_DISPLAY_BUTTON_MODE_RELEASED: {
 		APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");
