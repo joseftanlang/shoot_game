@@ -17,7 +17,7 @@
 #include "scr_archery_game.h"
 
 #define NUM_METEOROIDS              (5)
-#define SIZE_BITMAP_METEOROIDS_X    (20)
+#define SIZE_BITMAP_METEOROIDS_X    (20) //this is the macro for the width of the meteoroid bitmap, change this if u want to change the bitmap
 #define SIZE_BITMAP_METEOROIDS_Y    (10)
 
 #define AXIS_Y_METEOROID_START   (2)

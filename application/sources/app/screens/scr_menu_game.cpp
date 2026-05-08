@@ -23,7 +23,7 @@
 /*****************************************************************************/
 // Screen 
 #define STEP_MENU_CHOSSE				(22)
-#define NUMBER_MENU_ITEMS				(4)
+#define NUMBER_MENU_ITEMS				(5)		// number of items in the menu
 #define	SCREEN_MENU_H					(64)
 
 #define MENU_ITEMS_ICON_COLOR() \
@@ -32,6 +32,7 @@ do { \
 	menu_items_icon_color[1]	= !menu_chosse.items.is_item_2; \
 	menu_items_icon_color[2]	= !menu_chosse.items.is_item_3; \
 	menu_items_icon_color[3]	= !menu_chosse.items.is_item_4; \
+	menu_items_icon_color[4]	= !menu_chosse.items.is_item_5; \
 } while(0);
 
 struct menu_items{
@@ -40,6 +41,7 @@ struct menu_items{
 	unsigned int is_item_2 : 1;
 	unsigned int is_item_3 : 1;
 	unsigned int is_item_4 : 1;
+	unsigned int is_item_5 : 1;
 };
 
 // Menu items name
@@ -47,7 +49,8 @@ static char menu_items_name[NUMBER_MENU_ITEMS][20] = {
 	"   Archery Game   ",		// item 1
 	"   Setting        ",		// item 2
 	"   Charts         ",		// item 3
-	"   Exit           ",		// item 4
+	"   Lucky Number   ",		// item 4
+	"   Exit           ",		// item 5
 };
 
 // Menu items icon
@@ -55,7 +58,8 @@ static const uint8_t *menu_items_icon[NUMBER_MENU_ITEMS] = {
 	archery_icon,				// item 1
 	setting_icon,				// item 2
 	chart_icon,					// item 3
-	exit_icon,					// item 4
+	lucky_number_icon,			// item 4
+	exit_icon,					// item 5
 };
 
 // Menu items size W
@@ -64,6 +68,7 @@ uint8_t menu_items_icon_size_w[NUMBER_MENU_ITEMS] = {
 	16,							// item 2
 	17,							// item 3
 	16,							// item 4
+	16							// item 5
 };
 
 uint8_t menu_items_icon_size_h[NUMBER_MENU_ITEMS] = {
@@ -71,6 +76,7 @@ uint8_t menu_items_icon_size_h[NUMBER_MENU_ITEMS] = {
 	16,							// item 2
 	16,							// item 3
 	16,							// item 4
+	16							// item 5
 };
 
 // Menu items color
@@ -217,8 +223,10 @@ void screen_tran_menu() {
 	case 2:	{ // item 3
 		SCREEN_TRAN(scr_charts_game_handle,		&scr_charts_game	);
 	} break; 
-
 	case 3: { // item 4
+		SCREEN_TRAN(scr_lucky_num_handle,		&scr_lucky_num		);
+	} break;
+	case 4: { // item 5
 		scr_idle_set_return_screen(scr_menu_game_handle, &scr_menu_game);
 		SCREEN_TRAN(scr_idle_handle,			&scr_idle			);
 	} break;

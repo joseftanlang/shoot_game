@@ -60,18 +60,34 @@ void ar_game_meteoroid_handle(ak_msg_t *msg) {
                             bang[i].x				  = (meteoroid[i].x > 5 ? meteoroid[i].x - 5 : 0);
                             bang[i].y				  = meteoroid[i].y + 2;
 
+
                             // Reset arrow and meteoroid
                             arrow[j].x				  = 0;
                             arrow[j].y				  = 0;
+                            // Save the image shown at the moment of collision so
+                            // scoring uses the displayed bitmap, then randomize
+                            // the meteoroid for its next spawn.
+                            uint8_t prev_image = meteoroid[i].action_image;
                             meteoroid[i].x			  = RANDOM_METEOROID_X();
                             meteoroid[i].action_image = RANDOM_METEOROID_ACTION_IMAGE();
                             if (settingsetup.num_arrow < MAX_NUM_ARROW) {
                                 settingsetup.num_arrow++;
                             }
-
-                            // Update score and play sound
-                            ar_game_score += 10;
-                            BUZZER_PlaySound(BUZZER_SOUND_BANG);
+					switch (prev_image) {
+					case AR_GAME_METEOROID_ACTION_IMAGE_1:
+						ar_game_score += 1;
+						break;
+					case AR_GAME_METEOROID_ACTION_IMAGE_2:
+						ar_game_score += 5;
+						break;
+					case AR_GAME_METEOROID_ACTION_IMAGE_3:
+						ar_game_score += 10;
+						break;
+					default:
+						/* unknown image: no points */
+						break;
+					}
+					BUZZER_PlaySound(BUZZER_SOUND_BANG);
                             break;
                         }
 					}

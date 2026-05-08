@@ -8,6 +8,7 @@
 #include "scr_idle.h"
 #include "scr_menu_game.h"
 #include "scr_startup.h"
+#include "scr_lucky_num.h"
 
 // scr_archery_game
 extern view_dynamic_t dyn_view_item_archery_game;
@@ -43,5 +44,10 @@ extern void scr_menu_game_handle(ak_msg_t* msg);
 extern view_dynamic_t dyn_view_startup;
 extern view_screen_t scr_startup;
 extern void scr_startup_handle(ak_msg_t* msg);
+
+// scr_lucky_num
+extern view_dynamic_t dyn_view_item_lucky_num;
+extern view_screen_t scr_lucky_num;
+extern void scr_lucky_num_handle(ak_msg_t* msg);
 
 #endif //__SCREENS_H__
