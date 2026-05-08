@@ -272,7 +272,7 @@ void scr_archery_game_handle(ak_msg_t* msg) {
 		ar_game_score_read(&gamescore);
 		gamescore.score_now = ar_game_score;
 		ar_game_score_write(&gamescore);
-		ar_game_score = 10;
+		// ar_game_score = 10;
 
 		// Setup text animation timer
 		timer_set(	AC_TASK_DISPLAY_ID, \

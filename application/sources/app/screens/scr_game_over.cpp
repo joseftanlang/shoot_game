@@ -71,11 +71,15 @@ void scr_game_over_handle(ak_msg_t* msg) {
 		view_render.initialize();
 		view_render_display_on();
 
+		uint32_t score_save = gamescore.score_now;
 		// Read score 1st, 2nd, 3rd
 		ar_game_score_read(&gamescore);
 
+		gamescore.score_now = score_save;
+
 		// Reorganize
 		rank_ranking();
+		ar_game_score_write(&gamescore);
 
 		// Timer show idle screen
 		timer_set(	AC_TASK_DISPLAY_ID, \
@@ -88,6 +92,7 @@ void scr_game_over_handle(ak_msg_t* msg) {
 		APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");
 		// Save score and go Menu game
 		ar_game_score_write(&gamescore);
+		ar_game_score = 10;
 		SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
 	} break;
@@ -96,6 +101,7 @@ void scr_game_over_handle(ak_msg_t* msg) {
 		APP_DBG_SIG("AC_DISPLAY_BUTTON_UP_RELEASED\n");
 		// Save score and go Charts
 		ar_game_score_write(&gamescore);
+		ar_game_score = 10;
 		SCREEN_TRAN(scr_charts_game_handle, &scr_charts_game );
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
 	} break;
@@ -104,6 +110,7 @@ void scr_game_over_handle(ak_msg_t* msg) {
 		APP_DBG_SIG("AC_DISPLAY_BUTTON_DOWN_RELEASED\n");
 		// Save score and restart game
 		ar_game_score_write(&gamescore);
+		ar_game_score = 10;
 		SCREEN_TRAN(scr_archery_game_handle, &scr_archery_game );
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
 	} break;
