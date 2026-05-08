@@ -17,6 +17,7 @@ view_dynamic_t dyn_view_item_lucky_num = {
 	view_scr_lucky_num
 };
 
+// this is the screen struct for lucky number screen, it will be used in screen transition
 view_screen_t scr_lucky_num = {
 	&dyn_view_item_lucky_num,
 	ITEM_NULL,
@@ -25,6 +26,7 @@ view_screen_t scr_lucky_num = {
 	.focus_item = 0,
 };
 
+//this would be the function to draw the UI of lucky number screen, it will be called in the view function and also when we need to update the screen after user interaction
 static void draw_ui() {
 	view_render.clear();
 	view_render.setTextSize(1);
@@ -44,6 +46,7 @@ static void draw_ui() {
 	view_render.update();
 }
 
+// this function will show the countdown and generate the lucky number, it will be called when user press the mode button
 static void show_countdown_and_generate() {
 	// countdown 3 2 1
 	view_render.clear();
@@ -51,10 +54,12 @@ static void show_countdown_and_generate() {
 	view_render.setTextColor(WHITE);
 	for (int c = 3; c >= 1; c--) {
 		view_render.clear();
-		view_render.setCursor(44, 18);
+		view_render.setTextSize(4); // bigger size to fill most of the screen
+		view_render.setTextColor(WHITE);
+		view_render.setCursor(36, 8);
 		view_render.print(c);
 		view_render.update();
-		BUZZER_PlaySound(BUZZER_SOUND_3BEEP); //beep for each countdown number
+		BUZZER_PlaySound(BUZZER_SOUND_3BEEP);
 		sys_ctrl_delay_ms(600);
 	}
 
@@ -92,6 +97,7 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 	} break;
 
 	case AC_DISPLAY_BUTTON_UP_RELEASED: {
+        APP_DBG_SIG("AC_DISPLAY_BUTTON_UP_RELEASED\n");
 		if (lucky_selected_digits < LUCKY_NUM_MAX_DIGITS) {
 			lucky_selected_digits++;
 			BUZZER_PlaySound(BUZZER_SOUND_CLICK);
@@ -100,6 +106,7 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 	} break;
 
 	case AC_DISPLAY_BUTTON_DOWN_RELEASED: {
+        APP_DBG_SIG("AC_DISPLAY_BUTTON_DOWN_RELEASED\n");
 		if (lucky_selected_digits > LUCKY_NUM_MIN_DIGITS) {
 			lucky_selected_digits--;
 			BUZZER_PlaySound(BUZZER_SOUND_CLICK);
@@ -107,15 +114,23 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 		draw_ui();
 	} break;
 
-	case AC_DISPLAY_BUTTON_MODE_RELEASED: {
+    case AC_DISPLAY_BUTTON_UP_LONG_PRESSED: {
+        APP_DBG_SIG("AC_DISPLAY_BUTTON_UP_LONG_PRESSED\n");
+		SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
+		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    } break;
+
+    case AC_DISPLAY_BUTTON_MODE_RELEASED: {
+        APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");
 		show_countdown_and_generate();
 	} break;
 
-    case AC_DISPLAY_BUTTON_MODE_LONG_PRESSED: {
-        // Reset to initial state
-        lucky_selected_digits = LUCKY_NUM_MIN_DIGITS;
-        draw_ui();
-    } break;
+    // case AC_DISPLAY_SHOW_IDLE: {
+	// 	APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
+	// 	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
+	// 	scr_idle_set_return_screen(scr_charts_game_handle, &scr_charts_game);
+	// 	SCREEN_TRAN(scr_idle_handle, &scr_idle);
+	// } break;
 
 	default:
 		break;
