@@ -32,10 +32,11 @@ void ar_game_meteoroid_handle(ak_msg_t *msg) {
 		for (uint8_t i = 0; i < NUM_METEOROIDS; i++) {
 			if (meteoroid[i].visible == WHITE) {
 				meteoroid[i].x -= settingsetup.meteoroid_speed;
-				meteoroid[i].action_image++;
-				if (meteoroid[i].action_image > AR_GAME_METEOROID_ACTION_IMAGE_3) {
-					meteoroid[i].action_image = AR_GAME_METEOROID_ACTION_IMAGE_1;
-				}
+				//undo this if u want to make the bitmap change of the 3 contsantly
+				// meteoroid[i].action_image++;
+				// if (meteoroid[i].action_image > AR_GAME_METEOROID_ACTION_IMAGE_3) {
+				// 	meteoroid[i].action_image = AR_GAME_METEOROID_ACTION_IMAGE_1;
+				// }
 			}
 		}
 	} break;
