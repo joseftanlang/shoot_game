@@ -49,19 +49,34 @@ void view_scr_game_over() {
 /* Handle - game over */
 /*****************************************************************************/
 void rank_ranking() {
-	if (gamescore.score_now > gamescore.score_1st) {
-		gamescore.score_3rd = gamescore.score_2nd;
-		gamescore.score_2nd = gamescore.score_1st;
-		gamescore.score_1st = gamescore.score_now;
-	}
-	else if (gamescore.score_now > gamescore.score_2nd) {
-		gamescore.score_3rd = gamescore.score_2nd;
-		gamescore.score_2nd = gamescore.score_now;
-	}
-	else if (gamescore.score_now > gamescore.score_3rd) {
-		gamescore.score_3rd = gamescore.score_now;
-	}
+    // Check if current score ties with 1st place
+    if (gamescore.score_now == gamescore.score_1st) {
+    }
+    else if (gamescore.score_now > gamescore.score_1st) {
+        gamescore.score_3rd = gamescore.score_2nd;
+        gamescore.score_2nd = gamescore.score_1st;
+        gamescore.score_1st = gamescore.score_now;
+    }
+    else if (gamescore.score_now == gamescore.score_2nd) {
+    }
+    else if (gamescore.score_now > gamescore.score_3rd) {
+        gamescore.score_3rd = gamescore.score_now;
+    }
 }
+// void rank_ranking() {
+// 	if (gamescore.score_now > gamescore.score_1st) {
+// 		gamescore.score_3rd = gamescore.score_2nd;
+// 		gamescore.score_2nd = gamescore.score_1st;
+// 		gamescore.score_1st = gamescore.score_now;
+// 	}
+// 	else if (gamescore.score_now > gamescore.score_2nd) {
+// 		gamescore.score_3rd = gamescore.score_2nd;
+// 		gamescore.score_2nd = gamescore.score_now;
+// 	}
+// 	else if (gamescore.score_now > gamescore.score_3rd) {
+// 		gamescore.score_3rd = gamescore.score_now;
+// 	}
+// }
 
 void scr_game_over_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
