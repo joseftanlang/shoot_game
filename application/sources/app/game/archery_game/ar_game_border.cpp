@@ -13,7 +13,7 @@ void ar_game_border_handle(ak_msg_t *msg) {
 	case AR_GAME_BORDER_SETUP: {
 		APP_DBG_SIG("AR_GAME_BORDER_SETUP\n");
 		border.x			= AXIS_X_BORDER;
-		border.visible		= WHITE;
+		border.visible		= WHITE; //this is the line in the game to show if its detected or not
 		border.action_image = AR_GAME_BORDER_ACTION_IMAGE_1;
 	} break;
 

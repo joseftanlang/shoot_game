@@ -14,6 +14,7 @@
 button_t btn_mode;
 button_t btn_up;
 button_t btn_down;
+// bool btn_mode_state = false;
 
 void btn_mode_callback(void* b) {
 	button_t* me_b = (button_t*)b;
@@ -60,6 +61,9 @@ void btn_up_callback(void* b) {
 	case BUTTON_SW_STATE_LONG_PRESSED: {
 		APP_DBG("[%s] BUTTON_SW_STATE_LONG_PRESSED\n", __func__);
 		task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_UP_LONG_PRESSED);
+		// if (btn_mode_state == true) {
+		// 	task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTTON_UP_LONG&MODE_PRESSED);
+		// }
 	} break;
 
 	case BUTTON_SW_STATE_RELEASED: {
