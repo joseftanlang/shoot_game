@@ -49,9 +49,43 @@ const unsigned char PROGMEM bitmap_bang_III [] = {
 };
 
 // 'fruits bitmaps good'
+// 'bitmap_fruit_good_1', 8x8px (apple-like)
+const unsigned char PROGMEM bitmap_fruit_good_1 [] = {
+	0x18, 0x24, 0x5a, 0x7e, 0x7e, 0x3c, 0x18, 0x00
+};
+
+// 'bitmap_fruit_good_2', 8x8px (orange-like)
+const unsigned char PROGMEM bitmap_fruit_good_2 [] = {
+	0x10, 0x28, 0x3c, 0x7e, 0x7e, 0x3c, 0x18, 0x00
+};
+
+// 'bitmap_fruit_good_3', 8x8px (pear-like)
+const unsigned char PROGMEM bitmap_fruit_good_3 [] = {
+	0x10, 0x10, 0x38, 0x7c, 0x7c, 0x38, 0x10, 0x00
+};
 
 
 //'fruits bitmap bad'
+// 'bitmap_fruit_bad_1', 8x8px (rotten cross)
+const unsigned char PROGMEM bitmap_fruit_bad_1 [] = {
+	0x00, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x00
+};
+
+// 'bitmap_fruit_bad_2', 8x8px (thorny)
+const unsigned char PROGMEM bitmap_fruit_bad_2 [] = {
+	0x24, 0x5a, 0x24, 0x7e, 0x7e, 0x24, 0x5a, 0x24
+};
+
+// 'bitmap_fruit_bad_3', 8x8px (poison sign)
+const unsigned char PROGMEM bitmap_fruit_bad_3 [] = {
+	0x3c, 0x42, 0x99, 0xa5, 0xa5, 0x99, 0x42, 0x3c
+};
+
+// 'bitmap_fruit_basket', 16x8px
+const unsigned char PROGMEM bitmap_fruit_basket [] = {
+	0x00, 0x00, 0x3f, 0xfc, 0x6a, 0xac, 0x7f, 0xfc,
+	0x55, 0x54, 0x7f, 0xfc, 0x3f, 0xfc, 0x00, 0x00
+};
 
 
 /*****************************************************************************/

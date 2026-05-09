@@ -4,7 +4,7 @@
 #include "view_render.h"
 
 // scr_archery_game
-extern const unsigned char PROGMEM bitmap_archery_I []; 
+extern const unsigned char PROGMEM bitmap_archery_I [];
 extern const unsigned char PROGMEM bitmap_archery_II [];
 extern const unsigned char PROGMEM bitmap_meteoroid_I [];
 extern const unsigned char PROGMEM bitmap_meteoroid_II [];
@@ -34,5 +34,15 @@ extern const unsigned char PROGMEM chart_icon [];
 extern const unsigned char PROGMEM setting_icon [];
 extern const unsigned char PROGMEM exit_icon [];
 extern const unsigned char PROGMEM lucky_number_icon [];
+
+//fruits game
+extern const unsigned char PROGMEM bitmap_fruit_good_1 [];
+extern const unsigned char PROGMEM bitmap_fruit_good_2 [];
+extern const unsigned char PROGMEM bitmap_fruit_good_3 [];
+extern const unsigned char PROGMEM bitmap_fruit_bad_1 [];
+extern const unsigned char PROGMEM bitmap_fruit_bad_2 [];
+extern const unsigned char PROGMEM bitmap_fruit_bad_3 [];
+extern const unsigned char PROGMEM bitmap_fruit_basket [];
+
 
 #endif //__SCREENS_BITMAP_H__

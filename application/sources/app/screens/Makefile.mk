@@ -14,6 +14,7 @@ SOURCES_CPP += sources/app/screens/scr_game_over.cpp
 SOURCES_CPP += sources/app/screens/scr_charts_game.cpp
 SOURCES_CPP += sources/app/screens/screens_bitmap.cpp
 SOURCES_CPP += sources/app/screens/scr_lucky_num.cpp
+SOURCES_CPP += sources/app/screens/scr_fruit_game.cpp
 
 
 # Archery game 
