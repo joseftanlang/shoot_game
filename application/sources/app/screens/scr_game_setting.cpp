@@ -89,9 +89,9 @@ void view_scr_game_setting() {
 	view_render.print(" Arrows       ( ) ");
 	view_render.setCursor(AR_GAME_SETTING_NUMBER_AXIS_X, 5);
 	view_render.print(settingdata.num_arrow);    
-	// Mine speed
+	// Speed
 	view_render.setCursor(AR_GAME_SETTING_TEXT_AXIS_X, 20);
-	view_render.print(" Meteoroid sp ( ) ");	
+	view_render.print(" Speed           ( ) ");	
 	view_render.setCursor(AR_GAME_SETTING_NUMBER_AXIS_X, 20);
 	view_render.print(settingdata.meteoroid_speed);
 	// Silent
