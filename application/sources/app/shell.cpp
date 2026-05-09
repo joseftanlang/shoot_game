@@ -936,26 +936,31 @@ int32_t shell_buzzer(uint8_t* argv) {
 		break;
 
 	case '8': {
-		BUZZER_PlaySound(BUZZER_SOUND_MERRY_CHRISTMAS);
+		BUZZER_PlaySound(BUZZER_SOUND_JINGLE_BELLS);
 	}
 		break;
 
 	case '9': {
-		BUZZER_PlaySound(BUZZER_SOUND_WELCOME);
+		BUZZER_PlaySound(BUZZER_SOUND_MARIO_KART);
 	}
 		break;
 
 	case 'a': {
-		BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
+		BUZZER_PlaySound(BUZZER_SOUND_WELCOME);
 	}
 		break;
 
 	case 'b': {
-		BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
+		BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
 	}
 		break;
 
 	case 'c': {
+		BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
+	}
+		break;
+
+	case 'd': {
 		BUZZER_PlaySound(BUZZER_SOUND_LOWSCORE);
 	}
 		break;
@@ -971,11 +976,12 @@ int32_t shell_buzzer(uint8_t* argv) {
 		LOGIN_PRINT("7. \"beep 5\"                           : buzzer play tones startup \n");
 		LOGIN_PRINT("8. \"beep 6\"                           : buzzer play tones three beeps \n");
 		LOGIN_PRINT("9. \"beep 7\"                           : buzzer play tones super mario bros \n");
-		LOGIN_PRINT("10. \"beep 8\"                          : buzzer play tones merry christmas \n");
-		LOGIN_PRINT("11. \"beep 9\"                          : buzzer play tones welcome \n");
-		LOGIN_PRINT("12. \"beep a\"                          : buzzer play tones goodbye \n");
-		LOGIN_PRINT("13. \"beep b\"                          : buzzer play tones highscore \n");
-		LOGIN_PRINT("14. \"beep c\"                          : buzzer play tones lowscore \n");
+		LOGIN_PRINT("10. \"beep 8\"                          : buzzer play tones jingle bells \n");
+		LOGIN_PRINT("11. \"beep 9\"                          : buzzer play tones mario kart \n");
+		LOGIN_PRINT("12. \"beep a\"                          : buzzer play tones welcome \n");
+		LOGIN_PRINT("13. \"beep b\"                          : buzzer play tones goodbye \n");
+		LOGIN_PRINT("14. \"beep c\"                          : buzzer play tones highscore \n");
+		LOGIN_PRINT("15. \"beep d\"                          : buzzer play tones lowscore \n");
 		break;
 	}
 
