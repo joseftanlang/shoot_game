@@ -965,6 +965,11 @@ int32_t shell_buzzer(uint8_t* argv) {
 	}
 		break;
 
+	case 'e': {
+		BUZZER_PlaySound(BUZZER_SOUND_PIRATES_CARIBBEAN);
+	}
+		break;
+
 	default:
 		LOGIN_PRINT("\n[HELP]\n");
 		LOGIN_PRINT("1. \"beep i\"                           : init buzzer play tones \n");
@@ -982,6 +987,7 @@ int32_t shell_buzzer(uint8_t* argv) {
 		LOGIN_PRINT("13. \"beep b\"                          : buzzer play tones goodbye \n");
 		LOGIN_PRINT("14. \"beep c\"                          : buzzer play tones highscore \n");
 		LOGIN_PRINT("15. \"beep d\"                          : buzzer play tones lowscore \n");
+		LOGIN_PRINT("16. \"beep e\"                          : buzzer play tones pirates of the caribbean \n");
 		break;
 	}
 

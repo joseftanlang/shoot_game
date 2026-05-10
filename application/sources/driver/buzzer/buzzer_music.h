@@ -29,6 +29,7 @@ typedef enum {
 	BUZZER_SOUND_SUPER_MARIO,
 	BUZZER_SOUND_JINGLE_BELLS,
 	BUZZER_SOUND_MARIO_KART,
+	BUZZER_SOUND_PIRATES_CARIBBEAN,
 	BUZZER_SOUND_MAX
 } buzzer_sound_t;
 
@@ -46,6 +47,7 @@ extern const Tone_TypeDef tones_lowscore[];
 extern const Tone_TypeDef tones_smb[];
 extern const Tone_TypeDef tones_jingle_bells[];
 extern const Tone_TypeDef tones_mario_kart[];
+extern const Tone_TypeDef tones_pirates[];
 
 #ifdef __cplusplus
 }
