@@ -14,9 +14,6 @@ static uint8_t logo_bounce = 0;
 typedef struct { int8_t x; int8_t y; int8_t vy; int8_t life; } particle_t;
 static particle_t particles[STARTUP_PARTICLES];
 
-/*****************************************************************************/
-/* View - startup */
-/*****************************************************************************/
 static void view_scr_startup();
 
 view_dynamic_t dyn_view_startup = {
@@ -107,10 +104,6 @@ void view_scr_startup() {
 
 	view_render.update();
 }
-
-/*****************************************************************************/
-/* Handle - startup */
-/*****************************************************************************/
 void scr_startup_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
 	case AC_DISPLAY_INITIAL: {

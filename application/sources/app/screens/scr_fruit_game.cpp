@@ -121,7 +121,7 @@ static void fruit_game_draw_mask_line(uint8_t y, const char* label, uint8_t mask
     view_render.setCursor(2, y);
     view_render.print(label);
     for (uint8_t i = 0; i < 3; i++) {
-        view_render.print((mask & (1U << i)) ? '1' : '0');
+        view_render.print((mask & (1U << i)) ? '1' : '0'); // Print '1' if bit is set, '0' if not for each of the 3 fruits in the category
     }
 }
 
@@ -130,7 +130,7 @@ static void view_scr_fruit_game();
 /// Define the dynamic view item and screen for the fruit game
 view_dynamic_t dyn_view_item_fruit_game = {
     {
-        .item_type = ITEM_TYPE_DYNAMIC,
+        .item_type = ITEM_TYPE_DYNAMIC, //this is a dynamic view item that will call the view function to render each frame
     },
     view_scr_fruit_game
 };
