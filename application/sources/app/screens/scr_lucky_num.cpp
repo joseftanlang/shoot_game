@@ -123,6 +123,12 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     } break;
 
+	case AC_DISPLAY_BUTTON_DOWN_LONG_PRESSED: {
+        APP_DBG_SIG("AC_DISPLAY_BUTTON_DOWN_LONG_PRESSED\n");
+		SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
+		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    } break;
+
     case AC_DISPLAY_BUTTON_MODE_RELEASED: {
         APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");
 		show_countdown_and_generate();

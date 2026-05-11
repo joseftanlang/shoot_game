@@ -49,5 +49,6 @@ extern const unsigned char PROGMEM dino_icon [];
 extern const unsigned char PROGMEM cactus_icon_1 [];
 extern const unsigned char PROGMEM cactus_icon_2 [];
 extern const unsigned char PROGMEM cactus_icon_3 [];
+extern const unsigned char PROGMEM birddy_fly [];
 
 #endif //__SCREENS_BITMAP_H__

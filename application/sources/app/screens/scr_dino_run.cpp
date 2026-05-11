@@ -16,10 +16,10 @@
 #define DINO_RUN_DINO_HEIGHT           (15)
 #define DINO_RUN_GROUND_Y              (LCD_HEIGHT - DINO_RUN_DINO_HEIGHT)
 #define DINO_RUN_MIN_OBSTACLE_GAP      (70)
-#define DINO_RUN_MAX_OBSTACLES        (3)
+#define DINO_RUN_MAX_OBSTACLES         (3)
 #define DINO_RUN_OBSTACLE_SPAWN_SIG    (AR_GAME_DEFINE_SIG + 61)
 #define DINO_START_SCORE               (0)
-#define DINO_SCORE_INCREMENT           (1) //only if u want ot increase the points system
+#define DINO_SCORE_INCREMENT           (1) //only if u want to increase the points system then increase the number
 #define DINO_RUN_OFF                   (0)
 
 typedef struct {
@@ -69,12 +69,27 @@ static void dino_run_spawn_obstacle() {
     }
 }
 
+// Spawn an obstacle immediately at the right edge so it is visible when the game starts
+static void dino_run_spawn_initial() {
+    for (uint8_t i = 0; i < DINO_RUN_MAX_OBSTACLES; i++) {
+        if (!obstacles[i].active) {
+            obstacles[i].width = DINO_RUN_OBSTACLE_WIDTH;
+            obstacles[i].height = DINO_RUN_OBSTACLE_HEIGHT;
+            obstacles[i].type = rand() % 3; // keep using cactus types (0-2)
+            obstacles[i].y = DINO_RUN_GROUND_Y;
+            obstacles[i].x = LCD_WIDTH - obstacles[i].width - 1; // just inside right edge
+            obstacles[i].active = 1;
+            break;
+        }
+    }
+}
+
 static void dino_run_reset() {
     dino_run_score = DINO_START_SCORE;
     // Load speed from game settings (range 1-5)
     ar_game_setting_read(&settingdata);
     dino_run_settingsetup.speed = settingdata.meteoroid_speed;
-    //Dino faster speed equal to lesser duration in air for dino
+    //Dino faster speed equal to lesser duration in DINO_RUN_JUMP_DURATION_MS for dino
     
     obstacle_speed = (int16_t)dino_run_settingsetup.speed + 1; // ensure minimum movement
     dino_y = DINO_RUN_GROUND_Y;
@@ -161,6 +176,7 @@ static void dino_run_draw() {
         view_render.setCursor(35, 50);
         view_render.print(dino_run_score);
         view_render.update();
+        BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
         return;
     }
     // Draw dino
@@ -178,8 +194,6 @@ static void dino_run_draw() {
     view_render.setTextColor(WHITE);
     view_render.setCursor(35, 10);
     view_render.print("Score: ");
-    view_render.print(dino_run_score);
-    view_render.update();
 }
 
 static void view_scr_dino_run();
@@ -213,6 +227,8 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         dino_run_draw(); // draw initial frame
         timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_TICK_SIG, DINO_RUN_TICK_INTERVAL_MS, TIMER_PERIODIC);
         timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG, OBSTACLE_SPAWN_INTERVAL_MS, TIMER_PERIODIC);
+        // make sure player sees an obstacle immediately when the game starts
+        dino_run_spawn_initial();
     } break;
 
     case DINO_RUN_TICK_SIG: {
@@ -242,6 +258,7 @@ void scr_dino_run_handle(ak_msg_t* msg) {
             /* restart timers removed on collision */
             timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_TICK_SIG, DINO_RUN_TICK_INTERVAL_MS, TIMER_PERIODIC);
             timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG, OBSTACLE_SPAWN_INTERVAL_MS, TIMER_PERIODIC);
+            dino_run_spawn_initial();
             dino_run_draw();
             BUZZER_PlaySound(BUZZER_SOUND_CLICK);
             break;
@@ -252,6 +269,7 @@ void scr_dino_run_handle(ak_msg_t* msg) {
             /* ensure timers are running after reset */
             timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_TICK_SIG, DINO_RUN_TICK_INTERVAL_MS, TIMER_PERIODIC);
             timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG, OBSTACLE_SPAWN_INTERVAL_MS, TIMER_PERIODIC);
+            dino_run_spawn_initial();
             dino_run_draw();
         }
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
