@@ -44,5 +44,10 @@ extern const unsigned char PROGMEM bitmap_fruit_bad_2 [];
 extern const unsigned char PROGMEM bitmap_fruit_bad_3 [];
 extern const unsigned char PROGMEM bitmap_fruit_basket [];
 
+//dino game
+extern const unsigned char PROGMEM dino_icon [];
+extern const unsigned char PROGMEM cactus_icon_1 [];
+extern const unsigned char PROGMEM cactus_icon_2 [];
+extern const unsigned char PROGMEM cactus_icon_3 [];
 
 #endif //__SCREENS_BITMAP_H__

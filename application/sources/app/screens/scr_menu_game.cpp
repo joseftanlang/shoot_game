@@ -23,7 +23,7 @@
 /*****************************************************************************/
 // Screen 
 #define STEP_MENU_CHOSSE				(22)
-#define NUMBER_MENU_ITEMS				(6)		// number of items in the menu
+#define NUMBER_MENU_ITEMS				(7)		// number of items in the menu
 #define	SCREEN_MENU_H					(64)
 
 #define MENU_ITEMS_ICON_COLOR() \
@@ -32,8 +32,9 @@ do { \
 	menu_items_icon_color[1]	= !menu_chosse.items.is_item_2; \
 	menu_items_icon_color[2]	= !menu_chosse.items.is_item_3; \
 	menu_items_icon_color[3]	= !menu_chosse.items.is_item_4; \
-	menu_items_icon_color[4]	= !menu_chosse.items.is_item_5; \
-	menu_items_icon_color[5]	= !menu_chosse.items.is_item_6; \
+	menu_items_icon_color[4] 	= !menu_chosse.items.is_item_5; \
+	menu_items_icon_color[5] 	= !menu_chosse.items.is_item_6; \
+	menu_items_icon_color[6] 	= !menu_chosse.items.is_item_7; \
 } while(0);
 
 struct menu_items{
@@ -44,6 +45,7 @@ struct menu_items{
 	unsigned int is_item_4 : 1;
 	unsigned int is_item_5 : 1;
 	unsigned int is_item_6 : 1;
+	unsigned int is_item_7 : 1;
 };
 
 // Menu items name
@@ -52,37 +54,42 @@ static char menu_items_name[NUMBER_MENU_ITEMS][20] = {
 	"   Setting        ",		// item 2
 	"   Charts         ",		// item 3
 	"   Lucky Number   ",		// item 4
-	"   Fruit Game     ",		// item 5
-	"   Exit           ",		// item 6
+	"   Dino Run       ",		// item 5 (new)
+	"   Fruit Game     ",		// item 6
+	"   Exit           ",		// item 7
 };
 
 // Menu items icon
+// Menu items icon
 static const uint8_t *menu_items_icon[NUMBER_MENU_ITEMS] = {
-	archery_icon,				// item 1
-	setting_icon,				// item 2
-	chart_icon,					// item 3
-	lucky_number_icon,			// item 4
-	bitmap_fruit_good_1,		// item 5
-	exit_icon,					// item 6
+	archery_icon,                // item 1
+	setting_icon,                // item 2
+	chart_icon,                  // item 3
+	lucky_number_icon,           // item 4
+	dino_icon,                   // item 5 
+	bitmap_fruit_good_1,         // item 6
+	exit_icon,                   // item 7
 };
 
 // Menu items size W
 uint8_t menu_items_icon_size_w[NUMBER_MENU_ITEMS] = {
-	15,							// item 1
-	16,							// item 2
-	17,							// item 3
-	16,							// item 4
-	8,							// item 5
-	16							// item 6
+	15,                         // item 1 (Archery)
+	16,                         // item 2 (Setting)
+	17,                         // item 3 (Charts)
+	16,                         // item 4 (Lucky)
+	20,                         // item 5 (Dino)
+	8,                          // item 6 (Fruit)
+	16                          // item 7 (exit)
 };
 
 uint8_t menu_items_icon_size_h[NUMBER_MENU_ITEMS] = {
-	15,							// item 1
-	16,							// item 2
-	16,							// item 3
-	16,							// item 4
-	8,							// item 5
-	16							// item 6
+	15,                         // item 1 (Archery)
+	16,                         // item 2 (Setting)
+	16,                         // item 3 (Charts)
+	16,                         // item 4 (Lucky)
+	20,                         // item 5 (Dino)
+	8,                          // item 6 (Fruit)
+	16                          // item 7 (exit)
 };
 
 // Menu items color
@@ -232,19 +239,23 @@ void screen_tran_menu() {
 	case 3: { // item 4
 		SCREEN_TRAN(scr_lucky_num_handle,		&scr_lucky_num		);
 	} break;
-	case 4: { // item 5
-		SCREEN_TRAN(scr_fruit_game_handle,		&scr_fruit_game		);
+	case 4: { // item 5 (Dino)
+		SCREEN_TRAN(scr_dino_run_handle,        &scr_dino_run        );
 	} break;
 
-	case 5: { // item 6
+	case 5: { // item 6 (Fruit)
+		SCREEN_TRAN(scr_fruit_game_handle,        &scr_fruit_game        );
+	} break;
+
+	case 6: { // item 7 (Exit)
 		scr_idle_set_return_screen(scr_menu_game_handle, &scr_menu_game);
-		SCREEN_TRAN(scr_idle_handle,			&scr_idle			);
+		SCREEN_TRAN(scr_idle_handle,            &scr_idle            );
 	} break;
 	
 	default:
 		break;
-	}
 }
+};
 
 void scr_menu_game_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
@@ -316,8 +327,7 @@ void scr_menu_game_handle(ak_msg_t* msg) {
 		update_menu_screen_chosse();
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
 	} break;
-
 	default:
 		break;
 	}
-}
+};

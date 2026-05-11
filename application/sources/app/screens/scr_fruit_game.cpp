@@ -58,8 +58,8 @@ static void fruit_game_reset() {
     good_collected_mask = 0;
     bad_collected_mask = 0;
     // Load speed from game settings (range 1-5)
-    ar_game_setting_read(&settingdata);
-    fruit_settingsetup.speed = settingdata.meteoroid_speed;
+    ar_game_setting_read(&settingdata); //called from the game over screen, so we need to read the latest setting data from eeprom
+    fruit_settingsetup.speed = settingdata.meteoroid_speed; //we do this because we want to use the same speed setting for both meteoroids and fruits, so that players can adjust the difficulty of the fruit game in the same settings screen as the archery game
     basket_x = (LCD_WIDTH - FRUIT_GAME_BASKET_W) / 2;
     fruit_game_countdown_seconds = 30;
     fruit_game_spawn_fruit();
@@ -67,14 +67,14 @@ static void fruit_game_reset() {
 }
 // Check if two rectangles overlap on the X axis
 static uint8_t fruit_game_is_overlap_x(int16_t x1, int16_t w1, int16_t x2, int16_t w2) {
-    if (x1 + w1 < x2) return 0; //
+    if (x1 + w1 < x2) return 0; // If the right edge of the first rectangle is to the left of the second rectangle, no overlap
     if (x2 + w2 < x1) return 0;
     return 1;
 }
 // Process catch and update score and masks
 static void fruit_game_process_catch(uint8_t fruit_type) {
     if (fruit_type < FRUIT_GAME_NUM_GOOD) {
-        good_collected_mask |= (1U << fruit_type);
+        good_collected_mask |= (1U << fruit_type); // Set the bit corresponding to the caught good fruit
         fruit_game_score += 10;
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     }
@@ -203,7 +203,7 @@ static void view_scr_fruit_game() {
             } else {
                 view_render.print("3 Bad Fruits!");
             }
-            view_render.setCursor(20, 54);
+            // view_render.setCursor(20, 54);
             // view_render.print("Score: ");
             // view_render.print(fruit_game_score);
         }
@@ -291,10 +291,12 @@ void scr_fruit_game_handle(ak_msg_t* msg) {
         timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_TICK_SIG);
         timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_COUNTDOWN_SIG);
         SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     } break;
 
     case AC_DISPLAY_BUTTON_DOWN_LONG_PRESSED: {
         SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     }
 
     // case AC_DISPLAY_SHOW_IDLE: {

@@ -10,6 +10,7 @@
 #include "scr_startup.h"
 #include "scr_lucky_num.h"
 #include "scr_fruit_game.h"
+#include "scr_dino_run.h"
 
 // scr_archery_game
 extern view_dynamic_t dyn_view_item_archery_game;
@@ -55,5 +56,10 @@ extern void scr_lucky_num_handle(ak_msg_t* msg);
 extern view_dynamic_t dyn_view_item_fruit_game;
 extern view_screen_t scr_fruit_game;
 extern void scr_fruit_game_handle(ak_msg_t* msg);
+
+// scr_dino_run
+extern view_dynamic_t dyn_view_item_dino_run;
+extern view_screen_t scr_dino_run;
+extern void scr_dino_run_handle(ak_msg_t* msg);
 
 #endif //__SCREENS_H__
