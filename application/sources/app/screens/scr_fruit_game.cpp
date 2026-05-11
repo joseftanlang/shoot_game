@@ -168,7 +168,7 @@ static void view_scr_fruit_game() {
     view_render.drawBitmap(
         falling_fruit.x,
         falling_fruit.y,
-        fruit_bitmap_table[falling_fruit.type], // Get bitmap based on fruit type
+        fruit_bitmap_table[falling_fruit.type], // Get bitmap bas   ed on fruit type
         FRUIT_GAME_FRUIT_W,
         FRUIT_GAME_FRUIT_H,
         WHITE

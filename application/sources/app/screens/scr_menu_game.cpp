@@ -77,7 +77,7 @@ uint8_t menu_items_icon_size_w[NUMBER_MENU_ITEMS] = {
 	16,                         // item 2 (Setting)
 	17,                         // item 3 (Charts)
 	16,                         // item 4 (Lucky)
-	20,                         // item 5 (Dino)
+	15,                         // item 5 (Dino)
 	8,                          // item 6 (Fruit)
 	16                          // item 7 (exit)
 };
@@ -87,7 +87,7 @@ uint8_t menu_items_icon_size_h[NUMBER_MENU_ITEMS] = {
 	16,                         // item 2 (Setting)
 	16,                         // item 3 (Charts)
 	16,                         // item 4 (Lucky)
-	20,                         // item 5 (Dino)
+	15,                         // item 5 (Dino)
 	8,                          // item 6 (Fruit)
 	16                          // item 7 (exit)
 };
