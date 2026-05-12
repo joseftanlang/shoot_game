@@ -71,6 +71,7 @@ void ar_game_setting_set_default(ar_game_setting_t *data) {
 	data->num_arrow	  	  = AR_GAME_SETTING_NUM_ARROW_DEFAULT;
 	data->arrow_speed	  = AR_GAME_SETTING_ARROW_SPEED_DEFAULT;
 	data->meteoroid_speed = AR_GAME_SETTING_METEOROID_SPEED_DEFAULT;
+	data->day_night = 0;
 }
 
 bool ar_game_setting_read(ar_game_setting_t *data) {

@@ -40,6 +40,7 @@ typedef struct {
   uint8_t num_arrow;
   uint8_t arrow_speed;
   uint8_t meteoroid_speed;
+  uint8_t day_night; // 0 = day, 1 = night (persisted)
 } ar_game_setting_t;
 
 /* score data */

@@ -54,7 +54,7 @@ static char menu_items_name[NUMBER_MENU_ITEMS][20] = {
 	"   Setting        ",		// item 2
 	"   Charts         ",		// item 3
 	"   Lucky Number   ",		// item 4
-	"   Dino Run       ",		// item 5 (new)
+	"   Dino Run       ",		// item 5 
 	"   Fruit Game     ",		// item 6
 	"   Exit           ",		// item 7
 };

@@ -47,8 +47,16 @@ static uint8_t first_cactus_passed = 0;
 typedef struct { int16_t x; int16_t y; int8_t vx; uint8_t width; uint8_t height; uint8_t active; } bird_t;
 static bird_t bird = {0};
 
+// day/night period: 0 = day, 1 = night. Use 0xFF to indicate "load from EEPROM/defaults".
+static uint8_t Period_time = 0xFF;
+
+// cloud support (only during day)
+#define DINO_RUN_MAX_CLOUDS 2
+typedef struct { int16_t x; int16_t y; int8_t vx; uint8_t width; uint8_t height; uint8_t active; } cloud_t;
+static cloud_t clouds[DINO_RUN_MAX_CLOUDS];
+
 // dynamic jump duration (ms) adjusted by speed
-static int32_t dino_jump_duration_ms = DINO_RUN_JUMP_DURATION_MS;
+static uint32_t dino_jump_duration_ms = DINO_RUN_JUMP_DURATION_MS;
 
 
 static void dino_run_spawn_obstacle() {
@@ -85,7 +93,7 @@ static void dino_run_spawn_bird() {
     if (bird.active) return;
     // low/medium probability spawn: random chance (increase visibility)
     if ((rand() % 100) > 50) return; // ~50% chance when called
-    bird.width = 16;
+    bird.width = 17;
     bird.height = 10;
     bird.x = LCD_WIDTH + (rand() % 30);
     // fly at an altitude between ground - 24 and ground - 40
@@ -100,6 +108,23 @@ static void dino_run_spawn_bird() {
         bird.vx = (int8_t)vx;
     }
     bird.active = 1;
+}
+
+// Spawn cloud (day only)
+static void dino_run_spawn_cloud() {
+    if (Period_time != 0) return; // only spawn clouds during day
+    for (uint8_t i = 0; i < DINO_RUN_MAX_CLOUDS; i++) {
+        if (!clouds[i].active) {
+            clouds[i].width = 21; // cloud_icon width
+            clouds[i].height = 9; // cloud_icon height
+            clouds[i].x = LCD_WIDTH + (rand() % 40);
+            // spawn somewhere near the top (avoid overlapping sun/moon area)
+            clouds[i].y = 6 + (rand() % 18);
+            clouds[i].vx = 1; // slow drift
+            clouds[i].active = 1;
+            break;
+        }
+    }
 }
 
 // Spawn an obstacle immediately at the right edge so it is visible when the game starts
@@ -123,6 +148,10 @@ static void dino_run_reset() {
     // Load speed from game settings (range 1-5)
     ar_game_setting_read(&settingdata);
     dino_run_settingsetup.speed = settingdata.meteoroid_speed;
+    // restore persisted day/night period only when not manually overridden
+    if (Period_time == 0xFF) {
+        Period_time = settingdata.day_night;
+    }
     //Dino faster speed equal to lesser duration in DINO_RUN_JUMP_DURATION_MS for dino
     
     obstacle_speed = (int16_t)dino_run_settingsetup.speed + 1; // ensure minimum movement
@@ -148,8 +177,17 @@ static void dino_run_reset() {
     bird.x = -32;
     bird.y = 0;
     bird.vx = 0;
-    bird.width = 16;
+    bird.width = 17; 
     bird.height = 10;
+    // reset clouds
+    for (uint8_t i = 0; i < DINO_RUN_MAX_CLOUDS; i++) {
+        clouds[i].active = 0;
+        clouds[i].x = -32;
+        clouds[i].y = 0;
+        clouds[i].vx = 0;
+        clouds[i].width = 0;
+        clouds[i].height = 0;
+    }
 }
 
 // Returns true if the two rectangles overlap in the x-axis
@@ -184,6 +222,17 @@ static void dino_run_update() {
         if (bird.x + bird.width < 0) {
             bird.active = 0;
             bird.x = -bird.width;
+        }
+    }
+
+    // update clouds
+    for (uint8_t i = 0; i < DINO_RUN_MAX_CLOUDS; i++) {
+        if (clouds[i].active) {
+            clouds[i].x -= clouds[i].vx;
+            if (clouds[i].x + clouds[i].width < 0) {
+                clouds[i].active = 0;
+                clouds[i].x = -clouds[i].width;
+            }
         }
     }
 
@@ -256,6 +305,22 @@ static void dino_run_draw() {
         BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
         return;
     }
+    // Draw day/night indicator (sun / moon)
+    if (Period_time == 0) {
+        view_render.drawBitmap(LCD_WIDTH - 14, 2, sun_icon, 13, 13, WHITE);
+    } else if (Period_time == 1) {
+        view_render.drawBitmap(LCD_WIDTH - 14, 2, moon_icon, 13, 13, WHITE);
+    } else {
+        view_render.drawBitmap(LCD_WIDTH - 14, 2, cloud_icon, 21, 9, WHITE); 
+    }
+
+    // Draw clouds (behind everything)
+    for (uint8_t i = 0; i < DINO_RUN_MAX_CLOUDS; i++) {
+        if (clouds[i].active) {
+            view_render.drawBitmap(clouds[i].x, clouds[i].y, cloud_icon, clouds[i].width, clouds[i].height, WHITE);
+        }
+    }
+
     // Draw dino
     view_render.drawBitmap(10, dino_y, dino_icon, DINO_RUN_DINO_WIDTH, DINO_RUN_DINO_HEIGHT, WHITE);
     // Draw bird if active (above ground)
@@ -331,12 +396,21 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         dino_run_spawn_obstacle();
         // occasionally attempt to spawn a bird as well
         dino_run_spawn_bird();
+        // spawn clouds occasionally during day
+        if (Period_time == 0) {
+            if ((rand() % 100) < 40) { // ~40% chance on spawn tick
+                dino_run_spawn_cloud();
+            }
+        }
     } break;
 
     case AC_DISPLAY_BUTTON_DOWN_RELEASED: {
         // If end screen displayed, restart the game
         if (show_end_screen) {
             show_end_screen = 0;
+            Period_time = (Period_time == 0) ? 1 : 0; // toggle day/night on restart
+            settingdata.day_night = Period_time;
+            ar_game_setting_write(&settingdata);
             dino_run_reset();
             dino_run_state = 1;
             /* restart timers removed on collision */
@@ -344,10 +418,13 @@ void scr_dino_run_handle(ak_msg_t* msg) {
             timer_set(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG, OBSTACLE_SPAWN_INTERVAL_MS, TIMER_PERIODIC);
             dino_run_spawn_initial();
             dino_run_draw();
-            BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+            BUZZER_PlaySound(BUZZER_SOUND_LETS_GO);
             break;
         }
         if (dino_run_state == DINO_RUN_OFF) {
+            Period_time = (Period_time == 0) ? 1 : 0; // toggle day/night on restart
+            settingdata.day_night = Period_time;
+            ar_game_setting_write(&settingdata);
             dino_run_reset();
             dino_run_state = 1;
             /* ensure timers are running after reset */
@@ -356,7 +433,7 @@ void scr_dino_run_handle(ak_msg_t* msg) {
             dino_run_spawn_initial();
             dino_run_draw();
         }
-        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+        BUZZER_PlaySound(BUZZER_SOUND_LETS_GO);
     } break;
 
     case AC_DISPLAY_BUTTON_UP_RELEASED: {
@@ -372,7 +449,7 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         timer_remove_attr(AC_TASK_DISPLAY_ID, DINO_RUN_TICK_SIG);
         timer_remove_attr(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG);
         SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
-        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+        BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
     } break;
 
     default:

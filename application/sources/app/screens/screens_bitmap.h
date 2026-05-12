@@ -50,5 +50,8 @@ extern const unsigned char PROGMEM cactus_icon_1 [];
 extern const unsigned char PROGMEM cactus_icon_2 [];
 extern const unsigned char PROGMEM cactus_icon_3 [];
 extern const unsigned char PROGMEM birddy_fly [];
+extern const unsigned char PROGMEM sun_icon [];
+extern const unsigned char PROGMEM moon_icon [];
+extern const unsigned char cloud_icon [];
 
 #endif //__SCREENS_BITMAP_H__
