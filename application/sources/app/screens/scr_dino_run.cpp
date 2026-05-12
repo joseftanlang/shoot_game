@@ -58,7 +58,6 @@ static cloud_t clouds[DINO_RUN_MAX_CLOUDS];
 // dynamic jump duration (ms) adjusted by speed
 static uint32_t dino_jump_duration_ms = DINO_RUN_JUMP_DURATION_MS;
 
-
 static void dino_run_spawn_obstacle() {
     for (uint8_t i = 0; i < DINO_RUN_MAX_OBSTACLES; i++) {
         if (!obstacles[i].active) { // If slot free
