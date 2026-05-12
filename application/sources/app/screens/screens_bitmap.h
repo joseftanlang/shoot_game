@@ -43,6 +43,7 @@ extern const unsigned char PROGMEM bitmap_fruit_bad_1 [];
 extern const unsigned char PROGMEM bitmap_fruit_bad_2 [];
 extern const unsigned char PROGMEM bitmap_fruit_bad_3 [];
 extern const unsigned char PROGMEM bitmap_fruit_basket [];
+extern const unsigned char PROGMEM bitmap_fruit_icon_apple [];
 
 //dino game
 extern const unsigned char PROGMEM dino_icon [];

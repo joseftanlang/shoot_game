@@ -60,14 +60,13 @@ static char menu_items_name[NUMBER_MENU_ITEMS][20] = {
 };
 
 // Menu items icon
-// Menu items icon
 static const uint8_t *menu_items_icon[NUMBER_MENU_ITEMS] = {
 	archery_icon,                // item 1
 	setting_icon,                // item 2
 	chart_icon,                  // item 3
 	lucky_number_icon,           // item 4
 	dino_icon,                   // item 5 
-	bitmap_fruit_good_1,         // item 6
+	bitmap_fruit_icon_apple,     // item 6
 	exit_icon,                   // item 7
 };
 
@@ -78,7 +77,7 @@ uint8_t menu_items_icon_size_w[NUMBER_MENU_ITEMS] = {
 	17,                         // item 3 (Charts)
 	16,                         // item 4 (Lucky)
 	15,                         // item 5 (Dino)
-	8,                          // item 6 (Fruit)
+	19,                         // item 6 (Fruit)
 	16                          // item 7 (exit)
 };
 
@@ -88,7 +87,7 @@ uint8_t menu_items_icon_size_h[NUMBER_MENU_ITEMS] = {
 	16,                         // item 3 (Charts)
 	16,                         // item 4 (Lucky)
 	15,                         // item 5 (Dino)
-	8,                          // item 6 (Fruit)
+	16,                         // item 6 (Fruit)
 	16                          // item 7 (exit)
 };
 

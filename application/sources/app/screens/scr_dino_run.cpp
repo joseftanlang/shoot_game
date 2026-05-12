@@ -151,9 +151,7 @@ static void dino_run_reset() {
     // restore persisted day/night period only when not manually overridden
     if (Period_time == 0xFF) {
         Period_time = settingdata.day_night;
-    }
-    //Dino faster speed equal to lesser duration in DINO_RUN_JUMP_DURATION_MS for dino
-    
+    }    
     obstacle_speed = (int16_t)dino_run_settingsetup.speed + 1; // ensure minimum movement
     // scale jump duration: faster game -> shorter jump duration (min 800ms)
     int32_t extra = (int32_t)(dino_run_settingsetup.speed - 1);
@@ -215,7 +213,6 @@ static void dino_run_update() {
             }
         }
     }
-
     // update bird if active
     if (bird.active) {
         bird.x -= bird.vx;
@@ -224,7 +221,6 @@ static void dino_run_update() {
             bird.x = -bird.width;
         }
     }
-
     // update clouds
     for (uint8_t i = 0; i < DINO_RUN_MAX_CLOUDS; i++) {
         if (clouds[i].active) {
@@ -235,7 +231,6 @@ static void dino_run_update() {
             }
         }
     }
-
     // Handle jumping with smooth (parabolic) trajectory
     if (is_jumping) {
         jump_elapsed_ms += DINO_RUN_TICK_INTERVAL_MS;
@@ -252,7 +247,6 @@ static void dino_run_update() {
             jump_elapsed_ms = 0;
         }
     }
-
     // Check for collisions (rectangle overlap)
     int16_t dino_x = 10;
     for (uint8_t i = 0; i < DINO_RUN_MAX_OBSTACLES; i++) {
@@ -273,7 +267,6 @@ static void dino_run_update() {
             return;
         }
     }
-
     // check collision with bird
     if (bird.active) {
         bool overlap_bird = dino_run_check_collision(dino_x, dino_y, DINO_RUN_DINO_WIDTH, DINO_RUN_DINO_HEIGHT, bird.x, bird.y, bird.width, bird.height);
@@ -287,7 +280,6 @@ static void dino_run_update() {
             return;
         }
     }
-
     // Increment score
     dino_run_score += DINO_SCORE_INCREMENT;
 }
@@ -313,14 +305,12 @@ static void dino_run_draw() {
     } else {
         view_render.drawBitmap(LCD_WIDTH - 14, 2, cloud_icon, 21, 9, WHITE); 
     }
-
     // Draw clouds (behind everything)
     for (uint8_t i = 0; i < DINO_RUN_MAX_CLOUDS; i++) {
         if (clouds[i].active) {
             view_render.drawBitmap(clouds[i].x, clouds[i].y, cloud_icon, clouds[i].width, clouds[i].height, WHITE);
         }
     }
-
     // Draw dino
     view_render.drawBitmap(10, dino_y, dino_icon, DINO_RUN_DINO_WIDTH, DINO_RUN_DINO_HEIGHT, WHITE);
     // Draw bird if active (above ground)
@@ -328,7 +318,7 @@ static void dino_run_draw() {
         view_render.drawBitmap(bird.x, bird.y, birddy_fly, bird.width, bird.height, WHITE);
     }
     // Draw obstacles
-    //rand() % 3 == 0 ? cactus_icon_1 : rand() % 3 == 1 ? cactus_icon_2 : cactus_icon_3, obstacles[i].x, obstacles[i].y)
+    //rand() % 3 == 0 ? cactus_icon_1 : rand() % 3 == 1 ? cactus_icon_2 : cactus_icon_3, obstacles[i].x, obstacles[i].y
     for (uint8_t i = 0; i < DINO_RUN_MAX_OBSTACLES; i++) {
         if (obstacles[i].active) {
             const unsigned char* bmp = (obstacles[i].type == 0) ? cactus_icon_1 : (obstacles[i].type == 1) ? cactus_icon_2 : cactus_icon_3;
@@ -377,7 +367,6 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         // make sure player sees an obstacle immediately when the game starts
         dino_run_spawn_initial();
     } break;
-
     case DINO_RUN_TICK_SIG: {
         if (dino_run_state == DINO_RUN_OFF) {
             if (show_end_screen) {
@@ -388,7 +377,6 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         dino_run_update();
         dino_run_draw();
     } break;
-
     case DINO_RUN_OBSTACLE_SPAWN_SIG: {
         if (dino_run_state == DINO_RUN_OFF) {
             return;
@@ -403,7 +391,6 @@ void scr_dino_run_handle(ak_msg_t* msg) {
             }
         }
     } break;
-
     case AC_DISPLAY_BUTTON_DOWN_RELEASED: {
         // If end screen displayed, restart the game
         if (show_end_screen) {
@@ -435,7 +422,6 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         }
         BUZZER_PlaySound(BUZZER_SOUND_LETS_GO);
     } break;
-
     case AC_DISPLAY_BUTTON_UP_RELEASED: {
         // Start jump if not already jumping
         if (dino_run_state == 1 && !is_jumping) {
@@ -444,16 +430,13 @@ void scr_dino_run_handle(ak_msg_t* msg) {
         }
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     } break;
-
     case AC_DISPLAY_BUTTON_MODE_RELEASED: {
         timer_remove_attr(AC_TASK_DISPLAY_ID, DINO_RUN_TICK_SIG);
         timer_remove_attr(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG);
         SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
         BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
     } break;
-
     default:
         break;
     }
 }
-

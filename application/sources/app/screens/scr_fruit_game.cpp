@@ -65,12 +65,14 @@ static void fruit_game_reset() {
     fruit_game_spawn_fruit();
     fruit_game_state = FRUIT_GAME_PLAY;
 }
+
 // Check if two rectangles overlap on the X axis
 static uint8_t fruit_game_is_overlap_x(int16_t x1, int16_t w1, int16_t x2, int16_t w2) {
     if (x1 + w1 < x2) return 0; // If the right edge of the first rectangle is to the left of the second rectangle, no overlap
     if (x2 + w2 < x1) return 0;
     return 1;
 }
+
 // Process catch and update score and masks
 static void fruit_game_process_catch(uint8_t fruit_type) {
     if (fruit_type < FRUIT_GAME_NUM_GOOD) {
@@ -96,6 +98,7 @@ static void fruit_game_process_catch(uint8_t fruit_type) {
         timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_COUNTDOWN_SIG);
     }
 }
+
 // Update fruit position and check for catch or miss
 static void fruit_game_update() {
     if (fruit_game_state != FRUIT_GAME_PLAY) {
@@ -162,9 +165,6 @@ static void view_scr_fruit_game() {
 
     view_render.drawLine(0, FRUIT_GAME_TOP_UI_H - 1, LCD_WIDTH, FRUIT_GAME_TOP_UI_H - 1, WHITE);
 
-    // fruit_game_draw_mask_line(14, "G:", good_collected_mask); // for debug
-    // fruit_game_draw_mask_line(24, "B:", bad_collected_mask);
-
     view_render.drawBitmap(
         falling_fruit.x,
         falling_fruit.y,
@@ -203,9 +203,6 @@ static void view_scr_fruit_game() {
             } else {
                 view_render.print("3 Bad Fruits!");
             }
-            // view_render.setCursor(20, 54);
-            // view_render.print("Score: ");
-            // view_render.print(fruit_game_score);
         }
     }
 }
@@ -230,10 +227,7 @@ void scr_fruit_game_handle(ak_msg_t* msg) {
             TIMER_PERIODIC
         );
     } break;
-    // case SCREEN_EXIT: {
-    //     timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_TICK_SIG);
-    //     timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_COUNTDOWN_SIG);
-    // } break;
+
     case FRUIT_GAME_TICK_SIG: {
         fruit_game_update();
     } break;
@@ -298,13 +292,6 @@ void scr_fruit_game_handle(ak_msg_t* msg) {
         SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     } break;
-
-    // case AC_DISPLAY_SHOW_IDLE: {
-    //     timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_TICK_SIG);
-    //     timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_COUNTDOWN_SIG);
-    //     scr_idle_set_return_screen(scr_fruit_game_handle, &scr_fruit_game);
-    //     SCREEN_TRAN(scr_idle_handle, &scr_idle);
-    // } break;
 
     default:
         break;

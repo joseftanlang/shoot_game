@@ -63,16 +63,12 @@ static void show_countdown_and_generate() {
 		BUZZER_PlaySound(BUZZER_SOUND_3BEEP);
 		sys_ctrl_delay_ms(600);
 	}
-
-
-
 	// generate random number with selected digits
 	uint32_t min = 1;
 	for (uint8_t i = 1; i < lucky_selected_digits; i++) min *= 10;
 	uint32_t max = min * 10 - 1;
 	uint32_t range = (max - min) + 1;
 	uint32_t r = min + (rand() % range);
-
 	// show result
 	view_render.fillRect(0, 0, 128, 64, WHITE); // fill background with white
 	view_render.setTextSize(1);
@@ -98,7 +94,6 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 		view_render_display_on();
 		draw_ui();
 	} break;
-
 	case AC_DISPLAY_BUTTON_UP_RELEASED: {
         APP_DBG_SIG("AC_DISPLAY_BUTTON_UP_RELEASED\n");
 		if (lucky_selected_digits < LUCKY_NUM_MAX_DIGITS) {
@@ -107,7 +102,6 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 		}
 		draw_ui();
 	} break;
-
 	case AC_DISPLAY_BUTTON_DOWN_RELEASED: {
         APP_DBG_SIG("AC_DISPLAY_BUTTON_DOWN_RELEASED\n");
 		if (lucky_selected_digits > LUCKY_NUM_MIN_DIGITS) {
@@ -116,31 +110,20 @@ void scr_lucky_num_handle(ak_msg_t* msg) {
 		}
 		draw_ui();
 	} break;
-
     case AC_DISPLAY_BUTTON_UP_LONG_PRESSED: {
         APP_DBG_SIG("AC_DISPLAY_BUTTON_UP_LONG_PRESSED\n");
 		SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     } break;
-
 	case AC_DISPLAY_BUTTON_DOWN_LONG_PRESSED: {
         APP_DBG_SIG("AC_DISPLAY_BUTTON_DOWN_LONG_PRESSED\n");
 		SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
 		BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     } break;
-
     case AC_DISPLAY_BUTTON_MODE_RELEASED: {
         APP_DBG_SIG("AC_DISPLAY_BUTTON_MODE_RELEASED\n");
 		show_countdown_and_generate();
 	} break;
-
-    // case AC_DISPLAY_SHOW_IDLE: {
-	// 	APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
-	// 	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
-	// 	scr_idle_set_return_screen(scr_charts_game_handle, &scr_charts_game);
-	// 	SCREEN_TRAN(scr_idle_handle, &scr_idle);
-	// } break;
-
 	default:
 		break;
 	}
