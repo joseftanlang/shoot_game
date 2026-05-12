@@ -29,6 +29,7 @@ typedef struct {
     uint8_t width;
     uint8_t height;
     uint8_t active;
+    uint8_t passed; // has the dino passed this obstacle
 } obstacle_t;
 
 uint8_t dino_run_state;
@@ -40,6 +41,14 @@ static uint8_t is_jumping = 0;
 static uint32_t jump_elapsed_ms = 0;
 static int16_t obstacle_speed = 2;
 static uint8_t show_end_screen = 0;
+static uint8_t first_cactus_passed = 0;
+
+// bird (air) obstacle
+typedef struct { int16_t x; int16_t y; int8_t vx; uint8_t width; uint8_t height; uint8_t active; } bird_t;
+static bird_t bird = {0};
+
+// dynamic jump duration (ms) adjusted by speed
+static int32_t dino_jump_duration_ms = DINO_RUN_JUMP_DURATION_MS;
 
 
 static void dino_run_spawn_obstacle() {
@@ -64,9 +73,33 @@ static void dino_run_spawn_obstacle() {
             obstacles[i].width = DINO_RUN_OBSTACLE_WIDTH;
             obstacles[i].height = DINO_RUN_OBSTACLE_HEIGHT;
             obstacles[i].active = 1;
+            obstacles[i].passed = 0;
             break;
         }
     }
+}
+
+// Spawn bird occasionally after first cactus has been passed
+static void dino_run_spawn_bird() {
+    if (!first_cactus_passed) return;
+    if (bird.active) return;
+    // low/medium probability spawn: random chance (increase visibility)
+    if ((rand() % 100) > 50) return; // ~50% chance when called
+    bird.width = 16;
+    bird.height = 10;
+    bird.x = LCD_WIDTH + (rand() % 30);
+    // fly at an altitude between ground - 24 and ground - 40
+    int16_t min_y = DINO_RUN_GROUND_Y - 40;
+    int16_t max_y = DINO_RUN_GROUND_Y - 24;
+    bird.y = min_y + (rand() % (max_y - min_y + 1));
+    // make bird speed relative to current game speed (obstacle_speed + player speed), clamp to [1..8]
+    {
+        int vx = obstacle_speed + (int)dino_run_settingsetup.speed;
+        if (vx < 1) vx = 1;
+        if (vx > 8) vx = 8;
+        bird.vx = (int8_t)vx;
+    }
+    bird.active = 1;
 }
 
 // Spawn an obstacle immediately at the right edge so it is visible when the game starts
@@ -79,6 +112,7 @@ static void dino_run_spawn_initial() {
             obstacles[i].y = DINO_RUN_GROUND_Y;
             obstacles[i].x = LCD_WIDTH - obstacles[i].width - 1; // just inside right edge
             obstacles[i].active = 1;
+            obstacles[i].passed = 0;
             break;
         }
     }
@@ -92,6 +126,10 @@ static void dino_run_reset() {
     //Dino faster speed equal to lesser duration in DINO_RUN_JUMP_DURATION_MS for dino
     
     obstacle_speed = (int16_t)dino_run_settingsetup.speed + 1; // ensure minimum movement
+    // scale jump duration: faster game -> shorter jump duration (min 800ms)
+    int32_t extra = (int32_t)(dino_run_settingsetup.speed - 1);
+    dino_jump_duration_ms = DINO_RUN_JUMP_DURATION_MS - (extra * 300);
+    if (dino_jump_duration_ms < 800) dino_jump_duration_ms = 800;
     dino_y = DINO_RUN_GROUND_Y;
     is_jumping = 0;
     jump_elapsed_ms = 0;
@@ -99,11 +137,19 @@ static void dino_run_reset() {
         obstacles[i].x = -DINO_RUN_OBSTACLE_WIDTH; // Start off-screen
         obstacles[i].y = DINO_RUN_GROUND_Y;
         obstacles[i].active = 0;
+        obstacles[i].passed = 0;
         obstacles[i].type = 0;
         obstacles[i].width = DINO_RUN_OBSTACLE_WIDTH;
         obstacles[i].height = DINO_RUN_OBSTACLE_HEIGHT;
     }
     show_end_screen = 0;
+    first_cactus_passed = 0;
+    bird.active = 0;
+    bird.x = -32;
+    bird.y = 0;
+    bird.vx = 0;
+    bird.width = 16;
+    bird.height = 10;
 }
 
 // Returns true if the two rectangles overlap in the x-axis
@@ -121,15 +167,32 @@ static void dino_run_update() {
                 obstacles[i].active = 0;
                 obstacles[i].x = -obstacles[i].width;
             }
+            // detect when dino passes an obstacle
+            int16_t dino_x = 10;
+            if (!obstacles[i].passed && (obstacles[i].x + obstacles[i].width) < dino_x) {
+                obstacles[i].passed = 1;
+                if (!first_cactus_passed) {
+                    first_cactus_passed = 1;
+                }
+            }
+        }
+    }
+
+    // update bird if active
+    if (bird.active) {
+        bird.x -= bird.vx;
+        if (bird.x + bird.width < 0) {
+            bird.active = 0;
+            bird.x = -bird.width;
         }
     }
 
     // Handle jumping with smooth (parabolic) trajectory
     if (is_jumping) {
         jump_elapsed_ms += DINO_RUN_TICK_INTERVAL_MS;
-        if (jump_elapsed_ms <= DINO_RUN_JUMP_DURATION_MS) {
+        if (jump_elapsed_ms <= dino_jump_duration_ms) {
             int32_t t = (int32_t)jump_elapsed_ms;
-            int32_t T = (int32_t)DINO_RUN_JUMP_DURATION_MS;
+            int32_t T = (int32_t)dino_jump_duration_ms;
             int32_t h = (int32_t)DINO_JUMP_HEIGHT;
             // offset = 4*h * t*(T-t) / T^2  -> smooth up and down, zero velocity at ends
             int32_t offset = (4 * h * t * (T - t)) / (T * T);
@@ -162,6 +225,20 @@ static void dino_run_update() {
         }
     }
 
+    // check collision with bird
+    if (bird.active) {
+        bool overlap_bird = dino_run_check_collision(dino_x, dino_y, DINO_RUN_DINO_WIDTH, DINO_RUN_DINO_HEIGHT, bird.x, bird.y, bird.width, bird.height);
+        if (overlap_bird) {
+            dino_run_state = DINO_RUN_OFF;
+            timer_remove_attr(AC_TASK_DISPLAY_ID, DINO_RUN_TICK_SIG);
+            timer_remove_attr(AC_TASK_DISPLAY_ID, DINO_RUN_OBSTACLE_SPAWN_SIG);
+            gamescore.score_now = dino_run_score;
+            BUZZER_PlaySound(BUZZER_SOUND_LOWSCORE);
+            show_end_screen = 1;
+            return;
+        }
+    }
+
     // Increment score
     dino_run_score += DINO_SCORE_INCREMENT;
 }
@@ -181,6 +258,10 @@ static void dino_run_draw() {
     }
     // Draw dino
     view_render.drawBitmap(10, dino_y, dino_icon, DINO_RUN_DINO_WIDTH, DINO_RUN_DINO_HEIGHT, WHITE);
+    // Draw bird if active (above ground)
+    if (bird.active) {
+        view_render.drawBitmap(bird.x, bird.y, birddy_fly, bird.width, bird.height, WHITE);
+    }
     // Draw obstacles
     //rand() % 3 == 0 ? cactus_icon_1 : rand() % 3 == 1 ? cactus_icon_2 : cactus_icon_3, obstacles[i].x, obstacles[i].y)
     for (uint8_t i = 0; i < DINO_RUN_MAX_OBSTACLES; i++) {
@@ -194,6 +275,7 @@ static void dino_run_draw() {
     view_render.setTextColor(WHITE);
     view_render.setCursor(35, 10);
     view_render.print("Score: ");
+    view_render.print(dino_run_score);
 }
 
 static void view_scr_dino_run();
@@ -247,6 +329,8 @@ void scr_dino_run_handle(ak_msg_t* msg) {
             return;
         }
         dino_run_spawn_obstacle();
+        // occasionally attempt to spawn a bird as well
+        dino_run_spawn_bird();
     } break;
 
     case AC_DISPLAY_BUTTON_DOWN_RELEASED: {

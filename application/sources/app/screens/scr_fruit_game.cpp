@@ -297,7 +297,7 @@ void scr_fruit_game_handle(ak_msg_t* msg) {
     case AC_DISPLAY_BUTTON_DOWN_LONG_PRESSED: {
         SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-    }
+    } break;
 
     // case AC_DISPLAY_SHOW_IDLE: {
     //     timer_remove_attr(AC_TASK_DISPLAY_ID, FRUIT_GAME_TICK_SIG);
